@@ -3,33 +3,32 @@
 
 #include "Polygon.h"
 
-//class rectangleTest : public ::testing::Test 
-//{
-//protected:
-//	virtual void SetUp() 
-//	{
-//		
-//	}
-//
-//	rectangle<float> rect;
-//};
-//
-//TEST_F(rectangleTest, TestRectangleArea)
-//{
-//	int width = 3;
-//	int height = 4;
-//	rectangle<float> rect; // (width, height)
-//	EXPECT_EQ(rect.get_area(), width * height);
-//}
+class rectangleTest : public ::testing::Test 
+{
+protected:
+	virtual void SetUp() 
+	{
+		
+	}
+
+	rectangle<float> rect;
+};
+
+TEST_F(rectangleTest, TestRectangleArea)
+{
+	int width = 3;
+	int height = 4;
+	rectangle<float> rect(width, height);
+	EXPECT_EQ(rect.get_area(), width * height);
+	EXPECT_EQ(rect.get_area(), 2);
+}
 
 int main(int argc, char **argv)
 {
 	int width = 3;
 	int height = 4;
 	rectangle<float> rect(width, height);
-	//EXPECT_EQ(rect.get_area(), width * height);
-	//EXPECT_EQ(rect.get_area(), 2);
-
+	
 	testing::InitGoogleTest(&argc, argv);
 	return RUN_ALL_TESTS();
 }
