@@ -26,13 +26,60 @@ public:
 };
 
 template<class real_t>  
-class rectangle : public polygon, public properties_printer
+class rectangle : public polygon, virtual public properties_printer
 {
 public:
 	rectangle() : polygon() {name = "Rectangle";};
 	rectangle(int width_, int height_) : polygon(width_, height_) {name = "Rectangle";};
 	real_t get_area();
 	void print_properties();
+};
+
+//////////////////////////////////////////////////////////////////////////
+// Vehicles
+//////////////////////////////////////////////////////////////////////////
+
+class vehicle 
+{
+protected:
+	int wheels;
+	float weight;
+public:
+	virtual void print()
+	{
+		printf("I'm vehicle\n");
+	}
+};
+
+class car : public virtual vehicle
+{
+protected:
+	int passenger_load;
+public:
+	void print()
+	{
+		printf("I'm car\n");
+	}
+};
+
+class boat : public virtual vehicle 
+{
+protected:
+	float depth;
+public:
+	virtual void print()
+	{
+		printf("I'm boat\n");
+	}
+};
+
+class amphibian : public car, public boat
+{
+public:
+	virtual void print()
+	{
+		printf("I'm amphibian\n");
+	}
 };
 
 #endif
