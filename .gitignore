@@ -1,0 +1,6 @@
+*.user
+gtest
+*.suo
+*.ncb
+Release
+Debug
