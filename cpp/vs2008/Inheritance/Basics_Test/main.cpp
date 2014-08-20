@@ -56,26 +56,6 @@ TEST(containerTest, testInheritance)
 	}
 }
 
-TEST(vehiclesTest, testInheritance)
-{
-	vehicle* bmw = new car;
-	bmw->print();
-	vehicle* bombardier = new boat;
-	bombardier->print();
-	vehicle* luaz = new amphibian;
-	luaz->print();
-}
-
-int main(int argc, char **argv)
-{
-	//int width = 3;
-	//int height = 4;
-	//rectangle<float> rect(width, height);
-	
-	testing::InitGoogleTest(&argc, argv);
-	return RUN_ALL_TESTS();
-}
-
 #include <vector>
 #include <algorithm>
 
