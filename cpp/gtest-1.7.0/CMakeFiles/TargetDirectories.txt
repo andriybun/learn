@@ -1,0 +1,2 @@
+/home/andriybun/Workspace/tmp/learn/cpp/gtest-1.7.0/CMakeFiles/gtest.dir
+/home/andriybun/Workspace/tmp/learn/cpp/gtest-1.7.0/CMakeFiles/gtest_main.dir
