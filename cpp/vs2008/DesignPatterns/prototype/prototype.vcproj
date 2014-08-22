@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9,00"
-	Name="factory"
-	ProjectGUID="{861642E5-DB29-4CC7-94A2-6714BC595362}"
-	RootNamespace="factory"
+	Name="prototype"
+	ProjectGUID="{CFCE94AC-6D36-4594-9AD7-CB6BE96FF27C}"
+	RootNamespace="prototype"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="196613"
 	>
@@ -171,7 +171,7 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath="..\DesignPatterns\factory.cpp"
+				RelativePath="..\prototype.cpp"
 				>
 			</File>
 		</Filter>

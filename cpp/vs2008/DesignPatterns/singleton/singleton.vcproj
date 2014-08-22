@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9,00"
-	Name="singleton2"
-	ProjectGUID="{40CE1AC0-FDEC-4791-84BB-040DCDD3DDFA}"
-	RootNamespace="singleton2"
+	Name="singleton"
+	ProjectGUID="{9BEEB411-1840-42F9-B80B-3EE3F74A3521}"
+	RootNamespace="singleton"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="196613"
 	>
@@ -171,7 +171,7 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath=".\singleton2.cpp"
+				RelativePath="..\singleton.cpp"
 				>
 			</File>
 		</Filter>
