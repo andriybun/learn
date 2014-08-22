@@ -60,7 +60,7 @@ public:
 	data[0] = 12;
 	printf("Car: created data [%p]\n", data);
     }
-    virtual ~car()
+    /* virtual */ ~car()
     {
 	printf("Car: deleting data [%p] ...", data);
 	delete [] data;
@@ -98,7 +98,7 @@ public:
 	data[0] = 14;
 	printf("Amphibian: created data [%p]\n", data);
     }
-    virtual ~amphibian()
+    /* virtual */ ~amphibian()
     {
 	printf("Amphibian: deleting data [%p] ...", data);
 	delete [] data;
