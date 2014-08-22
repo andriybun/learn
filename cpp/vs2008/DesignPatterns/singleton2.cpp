@@ -1,4 +1,6 @@
-#include <cstring>
+#include <iostream>
+#include <string>
+
 
 class StringSingleton
 {
@@ -40,10 +42,15 @@ private: // private data for an instance of this class
 	std::string mString;
 };
 
+void foo()
+{
+	std::cout << "Foo: The value of the singleton: " << StringSingleton::Instance().GetString() << std::endl;
+}
+
 int main()
 {
-	StringSingleton singleton = StringSingleton::Instance();
-
-	//cout << "The value of the singleton: " << singleton->a << endl;
+	StringSingleton::Instance().SetString("Some string");
+	std::cout << "Main: The value of the singleton: " << StringSingleton::Instance().GetString() << std::endl;
+	foo();
 	return 0;
 }
