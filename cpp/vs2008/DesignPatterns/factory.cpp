@@ -44,6 +44,5 @@ int main()
 {
     Computer * lp = new Laptop();
     delete lp;
-    Laptop * cp = new Computer();
     return 0;
 }
