@@ -3,11 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 10.00
 # Visual Studio 2008
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "builder", "builder.vcproj", "{B2322B9A-ADA3-4B0F-BB9B-4EC4F3BF7868}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "factory", "..\factory\factory.vcproj", "{861642E5-DB29-4CC7-94A2-6714BC595362}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "factory", "factory.vcproj", "{861642E5-DB29-4CC7-94A2-6714BC595362}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "prototype", "..\prototype\prototype.vcproj", "{CFCE94AC-6D36-4594-9AD7-CB6BE96FF27C}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "prototype", "prototype.vcproj", "{CFCE94AC-6D36-4594-9AD7-CB6BE96FF27C}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "singleton", "..\singleton\singleton.vcproj", "{9BEEB411-1840-42F9-B80B-3EE3F74A3521}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "singleton", "singleton.vcproj", "{9BEEB411-1840-42F9-B80B-3EE3F74A3521}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "singleton2", "singleton2.vcproj", "{40CE1AC0-FDEC-4791-84BB-040DCDD3DDFA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -31,6 +33,10 @@ Global
 		{9BEEB411-1840-42F9-B80B-3EE3F74A3521}.Debug|Win32.Build.0 = Debug|Win32
 		{9BEEB411-1840-42F9-B80B-3EE3F74A3521}.Release|Win32.ActiveCfg = Release|Win32
 		{9BEEB411-1840-42F9-B80B-3EE3F74A3521}.Release|Win32.Build.0 = Release|Win32
+		{40CE1AC0-FDEC-4791-84BB-040DCDD3DDFA}.Debug|Win32.ActiveCfg = Debug|Win32
+		{40CE1AC0-FDEC-4791-84BB-040DCDD3DDFA}.Debug|Win32.Build.0 = Debug|Win32
+		{40CE1AC0-FDEC-4791-84BB-040DCDD3DDFA}.Release|Win32.ActiveCfg = Release|Win32
+		{40CE1AC0-FDEC-4791-84BB-040DCDD3DDFA}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
