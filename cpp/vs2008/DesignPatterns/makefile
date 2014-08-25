@@ -1,10 +1,18 @@
+#  -std=c++0x
+
 CC = g++
 CFLAGS = -I.
 
-all: builder factory prototype singleton singleton2
+all: adapter builder composite factory prototype singleton singleton2
+
+adapter: adapter.cpp
+	$(CC) $(CFLAGS) -std=c++0x adapter.cpp -o exe_adapter
 
 builder: builder.cpp
 	$(CC) $(CFLAGS) builder.cpp -o exe_builder
+
+composite: composite.cpp
+	$(CC) $(CFLAGS) composite.cpp -o exe_composite
 
 factory: factory.cpp
 	$(CC) $(CFLAGS) factory.cpp -o exe_factory

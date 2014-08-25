@@ -8,7 +8,10 @@ struct Muslim
  
 struct MuslimFemale : public Muslim
 {  // Concrete Target
-    virtual void performsMuslimRitual() override {std::cout << "Muslim girl performs Muslim ritual." << std::endl;}
+    virtual void performsMuslimRitual() override 
+    {
+	std::cout << "Muslim girl performs Muslim ritual." << std::endl;
+    }
 };
  
 struct Hindu
@@ -19,7 +22,10 @@ struct Hindu
  
 struct HinduFemale : public Hindu
 {  // Concrete Adaptee
-    virtual void performsHinduRitual() override {std::cout << "Hindu girl performs Hindu ritual." << std::endl;}
+    virtual void performsHinduRitual() override 
+    {
+	std::cout << "Hindu girl performs Hindu ritual." << std::endl;
+    }
 };
  
 struct MuslimRitual
@@ -37,7 +43,10 @@ private:
     Hindu* hindu;
 public:
     MuslimAdapter (Hindu* h) : hindu(h) {}
-    virtual void performsMuslimRitual() override {hindu->performsHinduRitual();}
+    virtual void performsMuslimRitual() override 
+    {
+	hindu->performsHinduRitual();
+    }
 };
  
 int main()
@@ -45,11 +54,12 @@ int main()
     HinduFemale* hinduGirl = new HinduFemale;
     MuslimFemale* muslimGirl = new MuslimFemale;
     MuslimRitual muslimRitual;
-    // muslimRitual.carryOutRitual (hinduGirl);  // Will not compile of course since the parameter must be of type Muslim*.
+    // muslimRitual.carryOutRitual (hinduGirl);
+    // Will not compile of course since the parameter must be of type Muslim*.
     MuslimAdapter* adaptedHindu = new MuslimAdapter (hinduGirl);  // hinduGirl has adapted to become a Muslim!
  
     muslimRitual.carryOutRitual (muslimGirl);
-    muslimRitual.carryOutRitual (adaptedHindu);  // So now hinduGirl, in the form of adaptedHindu, participates in the muslimRitual!
+    muslimRitual.carryOutRitual (adaptedHindu); // So now hinduGirl, in the form of adaptedHindu, participates in the muslimRitual!
     // Note that hinduGirl is carrying out her own type of ritual in muslimRitual though.
     delete adaptedHindu;  // adaptedHindu is not needed anymore
 }
