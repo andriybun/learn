@@ -47,6 +47,7 @@ Singleton* Singleton::GetInstance()
 int main()
 {
     Singleton* singleton = Singleton::GetInstance();
+	Singleton* singletona = Singleton::GetInstance();
     cout << "The value of the singleton: " << singleton->a << endl;
     return 0;
 }

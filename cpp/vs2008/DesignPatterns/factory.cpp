@@ -67,4 +67,5 @@ int main()
     Computer* desktop = ComputerFactory::NewComputer(ComputerFactory::desktop);
     desktop->Say();
     delete lp;
+    return 0;
 }
