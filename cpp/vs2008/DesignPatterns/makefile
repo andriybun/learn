@@ -1,7 +1,7 @@
 CC = g++
 CFLAGS = -I.
 
-all: builder factory prototype
+all: builder factory prototype singleton
 
 builder: builder.cpp
 	$(CC) $(CFLAGS) builder.cpp -o builder
@@ -11,3 +11,6 @@ factory: factory.cpp
 
 prototype: prototype.cpp
 	$(CC) $(CFLAGS) prototype.cpp -o prototype
+
+singleton: singleton.cpp
+	$(CC) $(CFLAGS) singleton.cpp -o singleton
