@@ -1,9 +1,10 @@
 .*/
 .directory
-*.*~
+*~
 #*#
 Debug
 Release
 *.user
 *.ncb
 *.suo
+exe_*
