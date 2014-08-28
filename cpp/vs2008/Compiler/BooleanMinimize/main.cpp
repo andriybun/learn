@@ -46,7 +46,7 @@ void error(int code)
          }
   printf("\nФopмулa нeпpaвильнa!\n");
   printf("Hатиснiть будь яку клавiшу!");
-  getch(); exit(1);
+  exit(1);
  }
 
 void E(void)
@@ -569,11 +569,11 @@ int main(void)
   int iii;
 //  clrscr();
   printf("\n");
-  for (iii=0;iii<21;iii++) printf("*");
-  printf(" Програма мiнiмiзaцiї булeвиx функцiй ");
-  for (iii=0;iii<21;iii++) printf("*");
+  for (iii=0;iii<15;iii++) printf("*");
+  printf(" Program for minimization of boolean expressions ");
+  for (iii=0;iii<15;iii++) printf("*");
   printf("\n");
-  printf("Bвeдiть функцiю:  ");
+  printf("Enter expression:  ");
   scanf("%s",&form);
   num=0;
   sdnf[0]='\0';

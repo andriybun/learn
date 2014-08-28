@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9,00"
-	Name="BooleanMinimize"
-	ProjectGUID="{6776DCA2-8D02-442B-B46B-824926CC4D14}"
-	RootNamespace="BooleanMinimize"
+	Name="MathExpressions"
+	ProjectGUID="{940D4700-94B1-4DED-9236-5E49F8B5AB53}"
+	RootNamespace="MathExpressions"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="196613"
 	>
@@ -174,12 +174,36 @@
 				RelativePath=".\main.cpp"
 				>
 			</File>
+			<File
+				RelativePath=".\operatorDataT.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\parser.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\token.cpp"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
+			<File
+				RelativePath=".\operatorDataT.h"
+				>
+			</File>
+			<File
+				RelativePath=".\parser.h"
+				>
+			</File>
+			<File
+				RelativePath=".\token.h"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Resource Files"

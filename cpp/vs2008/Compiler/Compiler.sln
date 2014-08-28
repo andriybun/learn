@@ -3,6 +3,8 @@ Microsoft Visual Studio Solution File, Format Version 10.00
 # Visual Studio 2008
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "BooleanMinimize", "BooleanMinimize\BooleanMinimize.vcproj", "{6776DCA2-8D02-442B-B46B-824926CC4D14}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MathExpressions", "MathExpressions\MathExpressions.vcproj", "{940D4700-94B1-4DED-9236-5E49F8B5AB53}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -13,6 +15,10 @@ Global
 		{6776DCA2-8D02-442B-B46B-824926CC4D14}.Debug|Win32.Build.0 = Debug|Win32
 		{6776DCA2-8D02-442B-B46B-824926CC4D14}.Release|Win32.ActiveCfg = Release|Win32
 		{6776DCA2-8D02-442B-B46B-824926CC4D14}.Release|Win32.Build.0 = Release|Win32
+		{940D4700-94B1-4DED-9236-5E49F8B5AB53}.Debug|Win32.ActiveCfg = Debug|Win32
+		{940D4700-94B1-4DED-9236-5E49F8B5AB53}.Debug|Win32.Build.0 = Debug|Win32
+		{940D4700-94B1-4DED-9236-5E49F8B5AB53}.Release|Win32.ActiveCfg = Release|Win32
+		{940D4700-94B1-4DED-9236-5E49F8B5AB53}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
