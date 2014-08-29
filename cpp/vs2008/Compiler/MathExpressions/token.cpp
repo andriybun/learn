@@ -1,7 +1,6 @@
 #include "token.h"
 
-int variableT::getValue(const std::map<std::string, int> &varTable,
-			std::stack<tokenT*> &polishStack) const
+int variableT::getValue(const std::map<std::string, int> &varTable) const
 {
     std::map<std::string, int>::const_iterator varData = varTable.find(this->name);
     if (varData == varTable.end())
@@ -11,8 +10,7 @@ int variableT::getValue(const std::map<std::string, int> &varTable,
     return varData->second;
 }
 
-int constantT::getValue(const std::map<std::string, int> &varTable,
-			std::stack<tokenT*> &polishStack) const
+int constantT::getValue(const std::map<std::string, int> &varTable) const
 {
     return this->name;
 }

@@ -7,11 +7,11 @@ parserT::parserT()
 
 parserT::~parserT(void)
 {
-	this->ClearStack<tokenT*>(this->polishTokenStack);
+    this->ClearStack<tokenT*, int>(this->polishTokenStack);
 }
 
-template <class T>
-void parserT::ClearStack(std::stack<T> &st)
+template <class T, class D>
+void parserT::ClearStack(std::stack<T, D> &st)
 {
 	while (!st.empty())
 	{

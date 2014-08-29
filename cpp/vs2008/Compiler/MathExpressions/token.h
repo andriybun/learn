@@ -4,16 +4,14 @@
 #include <string>
 #include <stack>
 #include <cstdio>
-#include "operator.h"
+//#include "operator.h"
 
 class tokenT
 {
 public:
 	tokenT(void) {};
 	~tokenT(void) {};
-	virtual int getValue(
-		const std::map<std::string, int> &varTable,
-		std::stack<tokenT*> &polishStack) const = 0;
+	virtual int getValue(const std::map<std::string, int> &varTable) const = 0;
 };
 
 class variableT : public tokenT
@@ -23,9 +21,7 @@ private:
 public:
 	variableT(const std::string &name): name(name) {};
 	~variableT(void) {};
-	int getValue(
-		const std::map<std::string, int> &varTable,
-		std::stack<tokenT*> &polishStack) const;
+	int getValue(const std::map<std::string, int> &varTable) const;
 };
 
 class constantT : public tokenT
@@ -35,9 +31,7 @@ private:
 public:
 	constantT(const int name): name(name) {};
 	~constantT(void) {};
-	int getValue(
-		const std::map<std::string, int> &varTable,
-		std::stack<tokenT*> &polishStack) const;
+	int getValue(const std::map<std::string, int> &varTable) const;
 };
 
 /*

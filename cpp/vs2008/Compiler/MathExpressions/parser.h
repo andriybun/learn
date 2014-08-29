@@ -8,6 +8,7 @@
 #include <vector>
 #include <iostream>
 
+#include "polish_stack.h"
 #include "token.h"
 
 
@@ -28,7 +29,7 @@ public:
 private:
 	std::map<std::string, operatorPropertiesT> operatorPrecedence;
 	std::vector<std::string> tokenVec, polishVec;
-	std::stack<tokenT*> polishTokenStack;
+	std::stack<tokenT*, int> polishTokenStack;
 	std::map<std::string, int> varTable;
 
 	void InitializeOperatorPrecedence()
@@ -45,7 +46,7 @@ private:
 	void TokenizeExpression(const std::string &expr);
 	void CompilePolishNotation();
 	void ProcessPolishVector();
-	template<class T> void ClearStack(std::stack<T> &st);
+	template<class T, class D> void ClearStack(std::stack<T> &st);
 public:
 	parserT();
 	~parserT(void);
