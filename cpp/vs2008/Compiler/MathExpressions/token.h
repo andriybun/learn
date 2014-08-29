@@ -2,8 +2,9 @@
 
 #include <map>
 #include <string>
+#include <stack>
 #include <cstdio>
-#include "operatorDataT.h"
+#include "operator.h"
 
 class tokenT
 {
@@ -12,7 +13,7 @@ public:
 	~tokenT(void) {};
 	virtual int getValue(
 		const std::map<std::string, int> &varTable,
-		const std::stack<tokenT*> &polishStack) const = 0;
+		std::stack<tokenT*> &polishStack) const = 0;
 };
 
 class variableT : public tokenT
@@ -24,7 +25,7 @@ public:
 	~variableT(void) {};
 	int getValue(
 		const std::map<std::string, int> &varTable,
-		const std::stack<tokenT*> &polishStack) const;
+		std::stack<tokenT*> &polishStack) const;
 };
 
 class constantT : public tokenT
@@ -36,9 +37,10 @@ public:
 	~constantT(void) {};
 	int getValue(
 		const std::map<std::string, int> &varTable,
-		const std::stack<tokenT*> &polishStack) const;
+		std::stack<tokenT*> &polishStack) const;
 };
 
+/*
 class operatorT : tokenT
 {
 private:
@@ -48,6 +50,7 @@ public:
 	~operatorT(void) {}; 
 	int getValue(
 		const std::map<std::string, int> &varTable,
-		const std::stack<tokenT*> &polishStack) const;
+		std::stack<tokenT*> &polishStack) const;
 
 };
+*/

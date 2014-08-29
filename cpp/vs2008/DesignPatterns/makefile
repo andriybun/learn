@@ -3,7 +3,7 @@
 CC = g++
 CFLAGS = -I.
 
-all: adapter builder composite factory prototype singleton singleton2
+all: adapter builder composite factory prototype singleton singleton2 state
 
 adapter: adapter.cpp
 	$(CC) $(CFLAGS) -std=c++0x adapter.cpp -o exe_adapter
@@ -25,3 +25,6 @@ singleton: singleton.cpp
 
 singleton2: singleton2.cpp
 	$(CC) $(CFLAGS) singleton2.cpp -o exe_singleton2
+
+state: state.cpp
+	$(CC) $(CFLAGS) -std=c++0x state.cpp -o exe_state

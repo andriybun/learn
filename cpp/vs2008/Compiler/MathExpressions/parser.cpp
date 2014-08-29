@@ -148,7 +148,7 @@ void parserT::CompilePolishNotation()
 	printf("Polish token vector:\n");
 	while (!this->polishTokenStack.empty())
 	{
-		std::cout << this->polishTokenStack.top()->getValue(this->varTable) << std::endl;
+	    std::cout << this->polishTokenStack.top()->getValue(this->varTable, polishTokenStack) << std::endl;
 		polishTokenStack.pop();
 	}
 }
