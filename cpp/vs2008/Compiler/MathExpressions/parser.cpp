@@ -7,25 +7,27 @@ parserT::parserT()
 
 parserT::~parserT(void)
 {
-	this->ClearPolishVector();
+	this->ClearStack<tokenT*>(this->polishTokenStack);
 }
 
-void parserT::ClearPolishVector()
+template <class T>
+void parserT::ClearStack(std::stack<T> &st)
 {
-	for (size_t i = 0; i < this->polishTokenVec.size(); i++)
+	while (!st.empty())
 	{
-		delete this->polishTokenVec[i];
+		delete st.top();
+		st.pop();
 	}
 }
+
+//template <> parserT::ClearStack<tokenT*>(stack<tokenT*> &st);
 
 void parserT::EvaluateExpression(const std::string &expr)
 {
 	this->tokenVec.clear();
-	this->ClearPolishVector();
-	this->polishTokenVec.clear();
+	this->ClearStack<tokenT*>(this->polishTokenStack);
 	this->TokenizeExpression(expr);
 	this->CompilePolishNotation();
-
 }
 
 
@@ -79,13 +81,13 @@ void parserT::CompilePolishNotation()
 		{
 			this->polishVec.push_back(word);
 			tokenT* tmp = new variableT(word);
-			this->polishTokenVec.push_back(tmp);
+			this->polishTokenStack.push(tmp);
 		}
 		else if (isNum)
 		{
 			this->polishVec.push_back(word);
 			tokenT* tmp = new constantT(atoi(word.c_str()));
-			this->polishTokenVec.push_back(tmp);
+			this->polishTokenStack.push(tmp);
 		}
 		else if (!word.compare("("))
 		{
@@ -144,10 +146,16 @@ void parserT::CompilePolishNotation()
 		printf("%s\n", this->polishVec[i].c_str());
 	}
 	printf("Polish token vector:\n");
-	for (size_t i = 0; i < this->polishTokenVec.size(); i++)
+	while (!this->polishTokenStack.empty())
 	{
-		std::cout << this->polishTokenVec[i]->name << std::endl;
+		std::cout << this->polishTokenStack.top()->getValue(this->varTable) << std::endl;
+		polishTokenStack.pop();
 	}
+}
+
+void parserT::AddVariable(const std::string &name, int val)
+{
+	this->varTable.insert(std::pair<std::string, int>(name, val));
 }
 
 bool parserT::IsNumber(const std::string &word)

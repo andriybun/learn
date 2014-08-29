@@ -1,5 +1,6 @@
 #pragma once
 
+#include <map>
 #include <string>
 #include <cstdio>
 #include "operatorDataT.h"
@@ -7,8 +8,11 @@
 class tokenT
 {
 public:
-	tokenT(void) {/*printf("construct\n");*/};
-	virtual ~tokenT(void) {/*printf("deconstruct\n");*/};
+	tokenT(void) {};
+	~tokenT(void) {};
+	virtual int getValue(
+		const std::map<std::string, int> &varTable,
+		const std::stack<tokenT*> &polishStack) const = 0;
 };
 
 class variableT : public tokenT
@@ -18,6 +22,9 @@ private:
 public:
 	variableT(const std::string &name): name(name) {};
 	~variableT(void) {};
+	int getValue(
+		const std::map<std::string, int> &varTable,
+		const std::stack<tokenT*> &polishStack) const;
 };
 
 class constantT : public tokenT
@@ -27,6 +34,9 @@ private:
 public:
 	constantT(const int name): name(name) {};
 	~constantT(void) {};
+	int getValue(
+		const std::map<std::string, int> &varTable,
+		const std::stack<tokenT*> &polishStack) const;
 };
 
 class operatorT : tokenT
@@ -36,4 +46,8 @@ private:
 public:
 	operatorT(operatorDataT::typeT name): name(name) {};
 	~operatorT(void) {}; 
+	int getValue(
+		const std::map<std::string, int> &varTable,
+		const std::stack<tokenT*> &polishStack) const;
+
 };
