@@ -48,7 +48,7 @@ public:
     }
 };
 
-class car : public /*virtual*/ vehicle
+class car : public vehicle
 {
 protected:
     int * data;
@@ -60,7 +60,7 @@ public:
 	data[0] = 12;
 	printf("Car: created data [%p]\n", data);
     }
-    /* virtual */ ~car()
+    ~car()
     {
 	printf("Car: deleting data [%p] ...", data);
 	delete [] data;
@@ -72,7 +72,7 @@ public:
     }
 };
 
-class boat : public virtual vehicle 
+class boat : public vehicle 
 {
 protected:
     float depth;
@@ -81,7 +81,7 @@ public:
     {
 	printf("Boat: constructor\n");
     };
-    virtual void print()
+    void print()
     {
 	printf("I'm boat\n");
     }
@@ -98,13 +98,13 @@ public:
 	data[0] = 14;
 	printf("Amphibian: created data [%p]\n", data);
     }
-    /* virtual */ ~amphibian()
+    ~amphibian()
     {
 	printf("Amphibian: deleting data [%p] ...", data);
 	delete [] data;
 	printf(" done\n");
     }
-    virtual void print()
+    void print()
     {
 	printf("I'm amphibian\n");
     }
