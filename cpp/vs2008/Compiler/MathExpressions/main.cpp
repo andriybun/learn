@@ -5,23 +5,20 @@ using namespace std;
 
 int main(int argc, char **argv)
 {
-    string inp("a + bad * c45a / (24 + de)");
-    //string inp("a = 3 + 4 * 2 / (1 - 5) ^ 2 ^ 3");
-    // TODO: power operator right assoc..
-    parserT parse;
-    try
-    {
-	parse.AddVariable("a", 13);
-	parse.AddVariable("bad", 33);
-	parse.AddVariable("c45a", 42);
-	parse.AddVariable("de", 76);
-	parse.EvaluateExpression(inp);
-	//parse.EvaluateExpression("a = 3 + 4 * 2 / (1 - 5) ^ 2 ^ 3");
-    }
-    catch (const char * e)
-    {
-	printf("Exception: %s\n", e);
-    }
-    
-    return 0;
+	parserT parse;
+	try
+	{
+		parse.EvaluateExpression("a = 13");
+		parse.EvaluateExpression("bad = 33");
+		parse.EvaluateExpression("c45a = 42");
+		parse.EvaluateExpression("de = 76");
+		parse.EvaluateExpression("b = a + bad * c45a / (24 + (de))");
+		parse.EvaluateExpression("a = b + 3 + 4 * 8 / (1 - 5) ^ 2");
+	}
+	catch (const char * e)
+	{
+		printf("Exception: %s\n", e);
+	}
+
+	return 0;
 }

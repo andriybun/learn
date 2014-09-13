@@ -7,11 +7,10 @@ parserT::parserT()
 
 parserT::~parserT(void)
 {
-    this->ClearStack<tokenT*, int>(this->polishTokenStack);
+    this->ClearStack(this->polishTokenStack);
 }
 
-template <class T, class D>
-void parserT::ClearStack(std::stack<T, D> &st)
+void parserT::ClearStack(polishStackT<tokenT*> &st)
 {
 	while (!st.empty())
 	{
@@ -20,12 +19,10 @@ void parserT::ClearStack(std::stack<T, D> &st)
 	}
 }
 
-//template <> parserT::ClearStack<tokenT*>(stack<tokenT*> &st);
-
 void parserT::EvaluateExpression(const std::string &expr)
 {
 	this->tokenVec.clear();
-	this->ClearStack<tokenT*>(this->polishTokenStack);
+	this->ClearStack(this->polishTokenStack);
 	this->TokenizeExpression(expr);
 	this->CompilePolishNotation();
 }
@@ -35,7 +32,7 @@ void parserT::TokenizeExpression(const std::string &expr)
 {
 	std::stringstream stringStream(expr);
 	std::string line;
-	std::string ops = GetOperatorsAsString();
+	std::string ops = this->operatorData.GetAsString();
 	while(std::getline(stringStream, line)) 
 	{
 		std::size_t prev = 0, pos;
@@ -57,18 +54,6 @@ void parserT::TokenizeExpression(const std::string &expr)
 	}
 }
 
-std::string parserT::GetOperatorsAsString()
-{
-	std::string operatorStr(" ()");
-	std::map<std::string, operatorPropertiesT>::iterator it = this->operatorPrecedence.begin();
-	while (it != this->operatorPrecedence.end())
-	{
-		operatorStr += it->first;
-		++it;
-	}
-	return operatorStr;
-}
-
 void parserT::CompilePolishNotation()
 {
 	std::stack<std::string> stk;
@@ -79,83 +64,72 @@ void parserT::CompilePolishNotation()
 		bool isNum = this->IsNumber(word);
 		if (isVar)
 		{
-			this->polishVec.push_back(word);
-			tokenT* tmp = new variableT(word);
-			this->polishTokenStack.push(tmp);
+			this->polishTokenStack.push(new variableT(word));
 		}
 		else if (isNum)
 		{
-			this->polishVec.push_back(word);
-			tokenT* tmp = new constantT(atoi(word.c_str()));
-			this->polishTokenStack.push(tmp);
+			this->polishTokenStack.push(new constantT(atoi(word.c_str())));
 		}
 		else if (!word.compare("("))
 		{
-			// TODO: include operators
 			stk.push(word);
 		}
 		else if (!word.compare(")"))
 		{
-			while (stk.top().compare("("))
+			while (!stk.empty() && stk.top().compare("("))
 			{
-				this->polishVec.push_back(stk.top());
+				this->operatorData.Execute(stk.top(), this->polishTokenStack);
 				stk.pop();
 				if (stk.empty())
 				{
-					throw "Error: parentheses";
+					throw "Error: unbalanced parentheses";
 				}
+			}
+			if (stk.empty())
+			{
+				throw "Error: unbalanced parentheses";
 			}
 			stk.pop();
 		}
 		else
 		{
-			std::map<std::string, operatorPropertiesT>::const_iterator currIt = this->operatorPrecedence.find(word);
-			if (currIt == this->operatorPrecedence.end())
-			{
-				throw "Error: unknown symbol";
-			}
+			operatorT::propertiesT operProp = this->operatorData.FindOperator(word);
 			if (stk.empty() || !(stk.top().compare("(")))
 			{
 				stk.push(word);
 			}
 			else
 			{
-				std::map<std::string, operatorPropertiesT>::const_iterator stkIt = this->operatorPrecedence.find(stk.top());
-				if ((stkIt->second.precedence < currIt->second.precedence) ||
-					((stkIt->second.precedence == currIt->second.precedence) &&
-					(currIt->second.asociativity == LEFT)))
+				operatorT::propertiesT stkOperProp = this->operatorData.FindOperator(stk.top());
+				if ((stkOperProp.precedence < operProp.precedence) ||
+					((stkOperProp.precedence == operProp.precedence) &&
+					(operProp.asociativity == operatorT::LEFT)))
 				{
-					this->polishVec.push_back(stk.top());
+					this->operatorData.Execute(stk.top(), this->polishTokenStack);
 					stk.pop();
 				}
 				stk.push(word);
 			}
-
-
 		}
 	}
-	// Push the remaining tokens into the polish notation vector
+	// Execute the remaining operations
 	while (!stk.empty())
 	{
-		this->polishVec.push_back(stk.top());
+		this->operatorData.Execute(stk.top(), this->polishTokenStack);
 		stk.pop();
 	}
-	printf("Polish vector:\n");
-	for (size_t i = 0; i < this->polishVec.size(); i++)
+	// Check if the resulting polish stack doesn't contain 1 element, then error
+	if (this->polishTokenStack.size() != 1)
 	{
-		printf("%s\n", this->polishVec[i].c_str());
+		throw "Error: wrong expression";
 	}
-	printf("Polish token vector:\n");
-	while (!this->polishTokenStack.empty())
-	{
-	    std::cout << this->polishTokenStack.top()->getValue(this->varTable, polishTokenStack) << std::endl;
-		polishTokenStack.pop();
-	}
+	// Print result
+	printf("Result: %d\n", this->polishTokenStack.topVal());
 }
 
 void parserT::AddVariable(const std::string &name, int val)
 {
-	this->varTable.insert(std::pair<std::string, int>(name, val));
+	this->polishTokenStack.DictInsert(name, val);
 }
 
 bool parserT::IsNumber(const std::string &word)

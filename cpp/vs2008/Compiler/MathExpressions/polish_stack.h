@@ -1,3 +1,5 @@
+#pragma once
+
 #include <cstdio>
 #include <map>
 #include <stack>
@@ -6,45 +8,48 @@
 #include "token.h"
 
 // T - type of word name
-// D - type of its description
-template<class T, class D>
+template<class T>
 class polishStackT : public std::stack<T>
 {
 private:
-    std::map<T, D> dict;
+    std::map<std::string, int> dict;
 public:
-    using std::stack<T>::push;
-    void push(const T &name, D val)
-    {
-	std::stack<T>::push(name);
-	this->DictInsert(name, val);
-    }
-
-    D topVal() const
-    {
-	return this->top().getValue(this->dict);
-    }
-
-    void DictInsert(const T &word, D val)
-    {
-	dict.insert(std::pair<T, D>(word, val));
-    }
-
-    void DictUpdate(const T &word, D val)
-    {
-	dict[word] = val;
-    }
-
-    D DictFind(const T &word) const
-    {
-	typename std::map<T, D>::const_iterator wordCard = dict.find(word);
-	if (wordCard == dict.end())
+	using std::stack<T>::push;
+	void push(const T &token, int val)
 	{
-	    throw "Error: word not found";
+		std::stack<T>::push(token);
 	}
-	else
+
+	int topVal() const
 	{
-	    return wordCard->second;
+		return this->top()->getValue(this->dict);
 	}
-    }
+	
+	std::string topName() const
+	{
+		return this->top()->getName();
+	}
+
+	void DictInsert(const std::string &word, int val)
+	{
+		dict.insert(std::pair<std::string, int>(word, val));
+	}
+
+	void DictUpdate(const std::string &word, int val)
+	{
+		dict[word] = val;
+	}
+
+	int DictFind(const std::string &word) const
+	{
+		typename std::map<T, int>::const_iterator wordCard = dict.find(word);
+		if (wordCard == dict.end())
+		{
+			throw "Error: word not found";
+		}
+		else
+		{
+			return wordCard->second;
+		}
+	}
 };

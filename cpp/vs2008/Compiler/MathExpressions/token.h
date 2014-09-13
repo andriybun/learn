@@ -4,14 +4,14 @@
 #include <string>
 #include <stack>
 #include <cstdio>
-//#include "operator.h"
 
 class tokenT
 {
 public:
 	tokenT(void) {};
-	~tokenT(void) {};
+	virtual ~tokenT(void) {};
 	virtual int getValue(const std::map<std::string, int> &varTable) const = 0;
+	virtual std::string getName() const = 0;
 };
 
 class variableT : public tokenT
@@ -22,6 +22,7 @@ public:
 	variableT(const std::string &name): name(name) {};
 	~variableT(void) {};
 	int getValue(const std::map<std::string, int> &varTable) const;
+	std::string getName() const;
 };
 
 class constantT : public tokenT
@@ -32,19 +33,17 @@ public:
 	constantT(const int name): name(name) {};
 	~constantT(void) {};
 	int getValue(const std::map<std::string, int> &varTable) const;
+	std::string getName() const;
 };
 
-/*
-class operatorT : tokenT
-{
-private:
-	operatorDataT::typeT name;
-public:
-	operatorT(operatorDataT::typeT name): name(name) {};
-	~operatorT(void) {}; 
-	int getValue(
-		const std::map<std::string, int> &varTable,
-		std::stack<tokenT*> &polishStack) const;
 
-};
-*/
+//class operatorStrT : public tokenT
+//{
+//private:
+//	std::string name;
+//public:
+//	operatorStrT(std::string name): name(name) {};
+//	~operatorStrT(void) {}; 
+//	int getValue(const std::map<std::string, int> &varTable) const;
+//	std::string getName() const;
+//};

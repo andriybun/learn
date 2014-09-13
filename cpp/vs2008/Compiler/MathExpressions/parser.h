@@ -8,45 +8,32 @@
 #include <vector>
 #include <iostream>
 
+#include "operator.h"
 #include "polish_stack.h"
 #include "token.h"
 
 
 class parserT
 {
-public:
-	enum opAsociativityT
-	{
-		LEFT,
-		RIGHT
-	};
-	struct operatorPropertiesT
-	{
-		int precedence;
-		opAsociativityT asociativity;
-		operatorPropertiesT(int pr, opAsociativityT as): precedence(pr), asociativity(as) {};
-	};
 private:
-	std::map<std::string, operatorPropertiesT> operatorPrecedence;
-	std::vector<std::string> tokenVec, polishVec;
-	std::stack<tokenT*, int> polishTokenStack;
-	std::map<std::string, int> varTable;
+	operatorT operatorData;
+	std::vector<std::string> tokenVec;
+	polishStackT<tokenT*> polishTokenStack;
 
 	void InitializeOperatorPrecedence()
 	{
-		this->operatorPrecedence.insert(std::pair<std::string, operatorPropertiesT>("+", operatorPropertiesT(6, LEFT)));
-		this->operatorPrecedence.insert(std::pair<std::string, operatorPropertiesT>("-", operatorPropertiesT(6, LEFT)));
-		this->operatorPrecedence.insert(std::pair<std::string, operatorPropertiesT>("*", operatorPropertiesT(5, LEFT)));
-		this->operatorPrecedence.insert(std::pair<std::string, operatorPropertiesT>("/", operatorPropertiesT(5, LEFT)));
-		this->operatorPrecedence.insert(std::pair<std::string, operatorPropertiesT>("%", operatorPropertiesT(5, LEFT)));
-		this->operatorPrecedence.insert(std::pair<std::string, operatorPropertiesT>("^", operatorPropertiesT(4, RIGHT)));
-		this->operatorPrecedence.insert(std::pair<std::string, operatorPropertiesT>("=", operatorPropertiesT(15, RIGHT)));
+		this->operatorData.AddOperator("+", operatorT::PLUS, 6, operatorT::LEFT);
+		this->operatorData.AddOperator("-", operatorT::MINUS, 6, operatorT::LEFT);
+		this->operatorData.AddOperator("*", operatorT::TIMES, 5, operatorT::LEFT);
+		this->operatorData.AddOperator("/", operatorT::DIVIDE, 5, operatorT::LEFT);
+		this->operatorData.AddOperator("%", operatorT::MODULO, 5, operatorT::LEFT);
+		this->operatorData.AddOperator("^", operatorT::POWER, 4, operatorT::RIGHT);
+		this->operatorData.AddOperator("=", operatorT::ASSIGN, 15, operatorT::RIGHT);
 	}
-	std::string GetOperatorsAsString();
 	void TokenizeExpression(const std::string &expr);
 	void CompilePolishNotation();
 	void ProcessPolishVector();
-	template<class T, class D> void ClearStack(std::stack<T> &st);
+	void ClearStack(polishStackT<tokenT*> &st);
 public:
 	parserT();
 	~parserT(void);

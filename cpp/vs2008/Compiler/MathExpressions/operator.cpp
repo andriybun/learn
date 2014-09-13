@@ -10,74 +10,139 @@ operatorT::~operatorT(void)
 
 void operatorT::AddOperator(const std::string &name, operatorT::typeT type, int precedence, operatorT::asociativityT asociativity)
 {
-    
-    this->properties.insert(
-	pair<std::string, this->propertiesT>(name, 
-	     propertiesT(type, precedence, asociativity)));
+	this->properties.insert(
+		std::pair<std::string, propertiesT>(name, propertiesT(type, precedence, asociativity)));
 }
 
-void operatorT::Execute(const std::string &name, std::stack<tokenT*> &polishTokenStack) const
+operatorT::propertiesT operatorT::FindOperator(const std::string &name) const
 {
-    std::map<std::string, propertiesT>::const_iterator oper = this->properties.find(name);
-    if (oper == this->properties.end())
-    {
-	throw "Error: unknown operator";
-    }
-    else
-    {
-	switch (oper->second.type)
+	std::map<std::string, propertiesT>::const_iterator oper = this->properties.find(name);
+	if (oper == this->properties.end())
+	{
+		throw "Error: unknown operator";
+	}
+	return oper->second;
+}
+
+void operatorT::Execute(const std::string &name, polishStackT<tokenT*> &ps) const
+{
+	propertiesT prop = this->FindOperator(name);
+	switch (prop.type)
 	{
 	case PLUS:
-
-	    break;
+		this->doPlus(ps);
+		break;
 	case MINUS:
-
-	    break;
+		this->doMinus(ps);
+		break;
 	case TIMES:
-
-	    break;
+		this->doTimes(ps);
+		break;
 	case DIVIDE:
-
-	    break;
+		this->doDivide(ps);
+		break;
+	case MODULO:
+		this->doModulo(ps);
+		break;
 	case POWER:
-	    
-	    break;
+		this->doPower(ps);
+		break;
 	case ASSIGN:
-
-	    break;
+		this->doAssign(ps);
+		break;
 	default:
-	    throw "Exception: operator not implemented";
+		throw "Exception: operator not implemented";
 	}
-    }
-
 }
 
-void operatorT::doPlus(std::stack<tokenT*> &s)
+std::string operatorT::GetAsString() const
 {
-    
+	std::string operatorStr(" ()");
+	std::map<std::string, propertiesT>::const_iterator it = this->properties.begin();
+	while (it != this->properties.end())
+	{
+		operatorStr += it->first;
+		++it;
+	}
+	return operatorStr;
 }
 
-void operatorT::doMinus(std::stack<tokenT*> &s)
+void operatorT::CheckPolishVector(polishStackT<tokenT*> &ps, size_t n) const
 {
-
+	if (ps.size() < n)
+	{
+		throw "Error: too many operators";
+	}
 }
 
-void operatorT::doTimes(std::stack<tokenT*> &s)
+void operatorT::doPlus(polishStackT<tokenT*> &ps) const
 {
-
+	CheckPolishVector(ps, 2);
+	int a = ps.topVal();
+	ps.pop();
+	int b = ps.topVal();
+	ps.pop();
+	ps.push(new constantT(b + a));
 }
 
-void operatorT::doDivide(std::stack<tokenT*> &s)
+void operatorT::doMinus(polishStackT<tokenT*> &ps) const
 {
-
+	CheckPolishVector(ps, 2);
+	int a = ps.topVal();
+	ps.pop();
+	int b = ps.topVal();
+	ps.pop();
+	ps.push(new constantT(b - a));
 }
 
-void operatorT::doPower(std::stack<tokenT*> &s)
+void operatorT::doTimes(polishStackT<tokenT*> &ps) const
 {
-
+	CheckPolishVector(ps, 2);
+	int a = ps.topVal();
+	ps.pop();
+	int b = ps.topVal();
+	ps.pop();
+	ps.push(new constantT(b * a));
 }
 
-void operatorT::doAssign(std::stack<tokenT*> &s)
+void operatorT::doDivide(polishStackT<tokenT*> &ps) const
 {
+	CheckPolishVector(ps, 2);
+	int a = ps.topVal();
+	ps.pop();
+	int b = ps.topVal();
+	ps.pop();
+	ps.push(new constantT(b / a));
+}
 
+void operatorT::doModulo(polishStackT<tokenT*> &ps) const
+{
+	CheckPolishVector(ps, 2);
+	int a = ps.topVal();
+	ps.pop();
+	int b = ps.topVal();
+	ps.pop();
+	ps.push(new constantT(b % a));
+}
+
+void operatorT::doPower(polishStackT<tokenT*> &ps) const
+{
+	CheckPolishVector(ps, 2);
+	int a = ps.topVal();
+	ps.pop();
+	int b = ps.topVal();
+	ps.pop();
+	int res = (int)ceil(pow((float)b, (float)a));
+	ps.push(new constantT(res));
+}
+
+void operatorT::doAssign(polishStackT<tokenT*> &ps) const
+{
+	CheckPolishVector(ps, 2);
+	int a = ps.topVal();
+	ps.pop();
+	std::string lhsName = ps.topName();
+	ps.pop();
+	ps.push(new variableT(lhsName));
+	ps.DictUpdate(lhsName, a);
 }
