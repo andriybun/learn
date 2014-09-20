@@ -1,6 +1,5 @@
 #pragma once
 
-#include <locale>
 #include <map>
 #include <string>
 #include <sstream>
@@ -8,27 +7,34 @@
 #include <vector>
 #include <iostream>
 
+#include "common.h"
 #include "operator.h"
-#include "polish_stack.h"
 #include "token.h"
+#include "polish_stack.h"
+#include "fsm.h"
 
+#include "boost/foreach.hpp"
+#define _foreach BOOST_FOREACH
+
+class fsm;
 
 class parserT
 {
 private:
-	operatorT operatorData;
+	operatorInfoT operatorData;
 	std::vector<std::string> tokenVec;
 	polishStackT<tokenT*> polishTokenStack;
 
 	void InitializeOperatorPrecedence()
 	{
-		this->operatorData.AddOperator("+", operatorT::PLUS, 6, operatorT::LEFT);
-		this->operatorData.AddOperator("-", operatorT::MINUS, 6, operatorT::LEFT);
-		this->operatorData.AddOperator("*", operatorT::TIMES, 5, operatorT::LEFT);
-		this->operatorData.AddOperator("/", operatorT::DIVIDE, 5, operatorT::LEFT);
-		this->operatorData.AddOperator("%", operatorT::MODULO, 5, operatorT::LEFT);
-		this->operatorData.AddOperator("^", operatorT::POWER, 4, operatorT::RIGHT);
-		this->operatorData.AddOperator("=", operatorT::ASSIGN, 15, operatorT::RIGHT);
+		this->operatorData.AddOperator("+", operatorInfoT::PLUS, 6, operatorInfoT::LEFT, 2);
+		this->operatorData.AddOperator("-", operatorInfoT::MINUS, 6, operatorInfoT::LEFT, 2);
+		//this->operatorData.AddOperator("-", operatorT::UNARY_MINUS, 3, operatorT::RIGHT, 1);
+		this->operatorData.AddOperator("*", operatorInfoT::TIMES, 5, operatorInfoT::LEFT, 2);
+		this->operatorData.AddOperator("/", operatorInfoT::DIVIDE, 5, operatorInfoT::LEFT, 2);
+		this->operatorData.AddOperator("%", operatorInfoT::MODULO, 5, operatorInfoT::LEFT, 2);
+		this->operatorData.AddOperator("^", operatorInfoT::POWER, 4, operatorInfoT::RIGHT, 2);
+		this->operatorData.AddOperator("=", operatorInfoT::ASSIGN, 15, operatorInfoT::RIGHT, 2);
 	}
 	void TokenizeExpression(const std::string &expr);
 	void CompilePolishNotation();
@@ -40,6 +46,6 @@ public:
 
 	void EvaluateExpression(const std::string &expr);
 	void AddVariable(const std::string &name, int val);
-	static bool IsNumber(const std::string &word);
-	static bool IsName(const std::string &word);
+
+	friend class fsm;
 };

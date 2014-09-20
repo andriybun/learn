@@ -1,20 +1,25 @@
 #include "operator.h"
+#include "token.h"
 
-operatorT::operatorT(void)
+operatorInfoT::operatorInfoT(void)
 {
 }
 
-operatorT::~operatorT(void)
+operatorInfoT::~operatorInfoT(void)
 {
 }
 
-void operatorT::AddOperator(const std::string &name, operatorT::typeT type, int precedence, operatorT::asociativityT asociativity)
+void operatorInfoT::AddOperator(const std::string &name,
+							operatorInfoT::typeT type,
+							int precedence,
+							operatorInfoT::asociativityT asociativity,
+							int numOperands)
 {
 	this->properties.insert(
-		std::pair<std::string, propertiesT>(name, propertiesT(type, precedence, asociativity)));
+		std::pair<std::string, propertiesT>(name, propertiesT(type, precedence, asociativity, numOperands)));
 }
 
-operatorT::propertiesT operatorT::FindOperator(const std::string &name) const
+operatorInfoT::propertiesT operatorInfoT::FindOperator(const std::string &name) const
 {
 	std::map<std::string, propertiesT>::const_iterator oper = this->properties.find(name);
 	if (oper == this->properties.end())
@@ -24,7 +29,7 @@ operatorT::propertiesT operatorT::FindOperator(const std::string &name) const
 	return oper->second;
 }
 
-void operatorT::Execute(const std::string &name, polishStackT<tokenT*> &ps) const
+void operatorInfoT::Execute(const std::string &name, polishStackT<tokenT*> &ps) const
 {
 	propertiesT prop = this->FindOperator(name);
 	switch (prop.type)
@@ -55,9 +60,9 @@ void operatorT::Execute(const std::string &name, polishStackT<tokenT*> &ps) cons
 	}
 }
 
-std::string operatorT::GetAsString() const
+std::string operatorInfoT::GetAsString() const
 {
-	std::string operatorStr(" ()");
+	std::string operatorStr;
 	std::map<std::string, propertiesT>::const_iterator it = this->properties.begin();
 	while (it != this->properties.end())
 	{
@@ -67,7 +72,7 @@ std::string operatorT::GetAsString() const
 	return operatorStr;
 }
 
-void operatorT::CheckPolishVector(polishStackT<tokenT*> &ps, size_t n) const
+void operatorInfoT::CheckPolishVector(polishStackT<tokenT*> &ps, size_t n) const
 {
 	if (ps.size() < n)
 	{
@@ -75,9 +80,9 @@ void operatorT::CheckPolishVector(polishStackT<tokenT*> &ps, size_t n) const
 	}
 }
 
-void operatorT::doPlus(polishStackT<tokenT*> &ps) const
+void operatorInfoT::doPlus(polishStackT<tokenT*> &ps) const
 {
-	CheckPolishVector(ps, 2);
+	this->CheckPolishVector(ps, 2);
 	int a = ps.topVal();
 	ps.pop();
 	int b = ps.topVal();
@@ -85,9 +90,9 @@ void operatorT::doPlus(polishStackT<tokenT*> &ps) const
 	ps.push(new constantT(b + a));
 }
 
-void operatorT::doMinus(polishStackT<tokenT*> &ps) const
+void operatorInfoT::doMinus(polishStackT<tokenT*> &ps) const
 {
-	CheckPolishVector(ps, 2);
+	this->CheckPolishVector(ps, 2);
 	int a = ps.topVal();
 	ps.pop();
 	int b = ps.topVal();
@@ -95,9 +100,9 @@ void operatorT::doMinus(polishStackT<tokenT*> &ps) const
 	ps.push(new constantT(b - a));
 }
 
-void operatorT::doTimes(polishStackT<tokenT*> &ps) const
+void operatorInfoT::doTimes(polishStackT<tokenT*> &ps) const
 {
-	CheckPolishVector(ps, 2);
+	this->CheckPolishVector(ps, 2);
 	int a = ps.topVal();
 	ps.pop();
 	int b = ps.topVal();
@@ -105,9 +110,9 @@ void operatorT::doTimes(polishStackT<tokenT*> &ps) const
 	ps.push(new constantT(b * a));
 }
 
-void operatorT::doDivide(polishStackT<tokenT*> &ps) const
+void operatorInfoT::doDivide(polishStackT<tokenT*> &ps) const
 {
-	CheckPolishVector(ps, 2);
+	this->CheckPolishVector(ps, 2);
 	int a = ps.topVal();
 	ps.pop();
 	int b = ps.topVal();
@@ -115,9 +120,9 @@ void operatorT::doDivide(polishStackT<tokenT*> &ps) const
 	ps.push(new constantT(b / a));
 }
 
-void operatorT::doModulo(polishStackT<tokenT*> &ps) const
+void operatorInfoT::doModulo(polishStackT<tokenT*> &ps) const
 {
-	CheckPolishVector(ps, 2);
+	this->CheckPolishVector(ps, 2);
 	int a = ps.topVal();
 	ps.pop();
 	int b = ps.topVal();
@@ -125,9 +130,9 @@ void operatorT::doModulo(polishStackT<tokenT*> &ps) const
 	ps.push(new constantT(b % a));
 }
 
-void operatorT::doPower(polishStackT<tokenT*> &ps) const
+void operatorInfoT::doPower(polishStackT<tokenT*> &ps) const
 {
-	CheckPolishVector(ps, 2);
+	this->CheckPolishVector(ps, 2);
 	int a = ps.topVal();
 	ps.pop();
 	int b = ps.topVal();
@@ -136,9 +141,9 @@ void operatorT::doPower(polishStackT<tokenT*> &ps) const
 	ps.push(new constantT(res));
 }
 
-void operatorT::doAssign(polishStackT<tokenT*> &ps) const
+void operatorInfoT::doAssign(polishStackT<tokenT*> &ps) const
 {
-	CheckPolishVector(ps, 2);
+	this->CheckPolishVector(ps, 2);
 	int a = ps.topVal();
 	ps.pop();
 	std::string lhsName = ps.topName();

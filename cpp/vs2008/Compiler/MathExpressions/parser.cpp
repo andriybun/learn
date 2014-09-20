@@ -32,7 +32,7 @@ void parserT::TokenizeExpression(const std::string &expr)
 {
 	std::stringstream stringStream(expr);
 	std::string line;
-	std::string ops = this->operatorData.GetAsString();
+	std::string ops = this->operatorData.GetAsString() + " ()";
 	while(std::getline(stringStream, line)) 
 	{
 		std::size_t prev = 0, pos;
@@ -52,6 +52,11 @@ void parserT::TokenizeExpression(const std::string &expr)
 		if (prev < line.length())
 			this->tokenVec.push_back(line.substr(prev, std::string::npos));
 	}
+	FiniteStateMachine fsm;
+	_foreach(std::string s, this->tokenVec)
+	{
+		fsm.processToken(s);
+	}
 }
 
 void parserT::CompilePolishNotation()
@@ -60,8 +65,8 @@ void parserT::CompilePolishNotation()
 	for (size_t i = 0; i < this->tokenVec.size(); i++)
 	{
 		std::string word = this->tokenVec[i];
-		bool isVar = this->IsName(word);
-		bool isNum = this->IsNumber(word);
+		bool isVar = IsName(word);
+		bool isNum = IsNumber(word);
 		if (isVar)
 		{
 			this->polishTokenStack.push(new variableT(word));
@@ -93,17 +98,17 @@ void parserT::CompilePolishNotation()
 		}
 		else
 		{
-			operatorT::propertiesT operProp = this->operatorData.FindOperator(word);
+			operatorInfoT::propertiesT operProp = this->operatorData.FindOperator(word);
 			if (stk.empty() || !(stk.top().compare("(")))
 			{
 				stk.push(word);
 			}
 			else
 			{
-				operatorT::propertiesT stkOperProp = this->operatorData.FindOperator(stk.top());
+				operatorInfoT::propertiesT stkOperProp = this->operatorData.FindOperator(stk.top());
 				if ((stkOperProp.precedence < operProp.precedence) ||
 					((stkOperProp.precedence == operProp.precedence) &&
-					(operProp.asociativity == operatorT::LEFT)))
+					(operProp.asociativity == operatorInfoT::LEFT)))
 				{
 					this->operatorData.Execute(stk.top(), this->polishTokenStack);
 					stk.pop();
@@ -132,20 +137,3 @@ void parserT::AddVariable(const std::string &name, int val)
 	this->polishTokenStack.DictInsert(name, val);
 }
 
-bool parserT::IsNumber(const std::string &word)
-{
-	// TODO: allow floats
-	std::string::const_iterator it = word.begin();
-	std::locale loc;
-	while (it != word.end() && std::isdigit(*it, loc)) ++it;
-	return !word.empty() && it == word.end();
-}
-
-bool parserT::IsName(const std::string &word)
-{
-	std::string::const_iterator it = word.begin();
-	std::locale loc;
-	if (!std::isalpha(*it++, loc)) return false;
-	while (it != word.end() && (std::isalpha(*it, loc) || std::isdigit(*it, loc))) ++it;
-	return !word.empty() && it == word.end();
-}

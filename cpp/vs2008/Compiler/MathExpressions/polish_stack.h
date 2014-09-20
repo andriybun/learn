@@ -5,8 +5,6 @@
 #include <stack>
 #include <string>
 
-#include "token.h"
-
 // T - type of word name
 template<class T>
 class polishStackT : public std::stack<T>

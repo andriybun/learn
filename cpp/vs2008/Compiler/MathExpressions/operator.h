@@ -4,16 +4,19 @@
 #include <math.h>
 #include <stack>
 #include <string>
-#include "token.h"
 #include "polish_stack.h"
 
-class operatorT
+class tokenT;
+
+// TODO: Singleton!
+class operatorInfoT
 {
 public:
 	enum typeT
 	{
 		PLUS,
 		MINUS,
+		UNARY_MINUS,
 		TIMES,
 		DIVIDE,
 		MODULO,
@@ -30,9 +33,12 @@ public:
 		typeT type;
 		int precedence;
 		asociativityT asociativity;
+		int numOperands;
 		propertiesT(typeT type, 
 			int precedence, 
-			asociativityT asociativity) : type(type), precedence(precedence), asociativity(asociativity) {};
+			asociativityT asociativity,
+			int numOperands) : 
+		type(type), precedence(precedence), asociativity(asociativity), numOperands(numOperands) {};
 	};
 
 private:
@@ -48,9 +54,14 @@ private:
 
 	void CheckPolishVector(polishStackT<tokenT*> &ps, size_t n) const;
 public:
-	operatorT(void);
-	~operatorT(void);
-	void AddOperator(const std::string &name, typeT type, int precedence, asociativityT asociativity);
+	operatorInfoT(void);
+	~operatorInfoT(void);
+	void AddOperator(
+		const std::string &name, 
+		typeT type, 
+		int precedence, 
+		asociativityT asociativity,
+		int numOperands);
 	propertiesT FindOperator(const std::string &name) const;
 	std::string GetAsString() const;
 	void Execute(const std::string &name, polishStackT<tokenT*> &ps) const;

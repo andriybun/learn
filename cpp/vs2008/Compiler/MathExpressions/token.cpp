@@ -1,5 +1,22 @@
 #include "token.h"
 
+tokenT::tokenT(void) {}
+
+tokenT::~tokenT(void) {}
+
+tokenT::typeT tokenT::getType()
+{
+	return this->tokenType;
+}
+
+variableT::variableT(const std::string &name)
+{
+	this->name = name;
+	this->tokenType = VARIABLE;
+}
+
+variableT::~variableT() {}
+
 int variableT::getValue(const std::map<std::string, int> &varTable) const
 {
 	std::map<std::string, int>::const_iterator varData = varTable.find(this->name);
@@ -12,8 +29,16 @@ int variableT::getValue(const std::map<std::string, int> &varTable) const
 
 std::string variableT::getName() const
 {
-	return name;
+	return this->name;
 }
+
+constantT::constantT(const int name)
+{
+	this->name = name;
+	this->tokenType = CONSTANT;
+}
+
+constantT::~constantT() {}
 
 int constantT::getValue(const std::map<std::string, int> &varTable) const
 {
@@ -22,17 +47,27 @@ int constantT::getValue(const std::map<std::string, int> &varTable) const
 
 std::string constantT::getName() const
 {
-	throw "Error: constant can't have a name";
-	return std::string("Error");
+	std::stringstream ss;
+	ss << this->name;
+	return ss.str();
 }
 
-//int operatorStrT::getValue(const std::map<std::string, int> &varTable) const
-//{
-//	throw "Error: operator doesn't have value";
-//	return -1;
-//}
+operatorT::operatorT(std::string name) 
+{
+	// TODO: this->type = ...
+	this->tokenType = OPERATOR;
+}
 
-//std::string operatorStrT ::getName() const
-//{
-//	return this->name;
-//}
+operatorT::~operatorT() {}
+
+int operatorT::getValue(const std::map<std::string, int> &varTable) const
+{
+	throw "Error: operator doesn't have value";
+	return -1;
+}
+
+std::string operatorT::getName() const
+{
+	throw "Error: not implemented";
+	return std::string();
+}
