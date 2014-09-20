@@ -15,12 +15,12 @@ void FiniteStateMachine::setCurrent(State *s)
 	this->current = s;
 }
 
-void FiniteStateMachine::processToken(const std::string &token)
+std::string FiniteStateMachine::processToken(const std::string &token)
 {
-	this->current->processToken(this, token);
+	return this->current->processToken(this, token);
 }
 
-void st0::processToken(fsmT* fsm, const std::string &token)
+std::string st0::processToken(fsmT* fsm, const std::string &token)
 {
 	// Beginning of expression. May start with variable to be assigned to.
 	if (IsName(token))
@@ -32,9 +32,10 @@ void st0::processToken(fsmT* fsm, const std::string &token)
 	{
 		throw "Error: Mathematical expression must start with a name of variable to be assigned to";
 	}
+	return token;
 }
 
-void st1::processToken(fsmT* fsm, const std::string &token)
+std::string st1::processToken(fsmT* fsm, const std::string &token)
 {
 	// After first variable in expression assignment operator is expected
 	if (!token.compare("="))
@@ -46,9 +47,10 @@ void st1::processToken(fsmT* fsm, const std::string &token)
 	{
 		throw "Error: assignment operator expected";
 	}
+	return token;
 }
 
-void st2::processToken(fsmT* fsm, const std::string &token)
+std::string st2::processToken(fsmT* fsm, const std::string &token)
 {
 	// Operand expected: name, constant, unary minus or opening parenthesis
 	if (IsName(token) || IsNumber(token))
@@ -60,6 +62,7 @@ void st2::processToken(fsmT* fsm, const std::string &token)
 	{
 		fsm->setCurrent(new st4);
 		delete this;
+		return std::string("u-");
 	}
 	else if (!token.compare("("))
 	{
@@ -69,11 +72,12 @@ void st2::processToken(fsmT* fsm, const std::string &token)
 	{
 		throw "Error: Wrong operand. Variable or constant expected";
 	}
+	return token;
 }
 
-void st3::processToken(fsmT* fsm, const std::string &token)
+std::string st3::processToken(fsmT* fsm, const std::string &token)
 {
-std::string ops("+-*/%^");
+	std::string ops("+-*/%^");
 	if (!token.compare(")"))
 	{
 		fsm->setCurrent(new st3);
@@ -89,9 +93,10 @@ std::string ops("+-*/%^");
 	{
 		throw "Error: Operation expected";
 	}
+	return token;
 }
 
-void st4::processToken(fsmT* fsm, const std::string &token)
+std::string st4::processToken(fsmT* fsm, const std::string &token)
 {
 	if (IsName(token) || IsNumber(token))
 	{
@@ -107,4 +112,5 @@ void st4::processToken(fsmT* fsm, const std::string &token)
 	{
 		throw "Error: Operand expected after unary minus";
 	}
+	return token;
 }

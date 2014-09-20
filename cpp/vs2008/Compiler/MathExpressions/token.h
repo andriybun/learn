@@ -7,8 +7,6 @@
 #include <cstdio>
 #include "operator.h"
 
-//class operatorInfoT;
-
 class tokenT
 {
 public:

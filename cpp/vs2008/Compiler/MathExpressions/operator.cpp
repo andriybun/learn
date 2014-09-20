@@ -9,14 +9,21 @@ operatorInfoT::~operatorInfoT(void)
 {
 }
 
+operatorInfoT& operatorInfoT::Instance()
+{
+	static operatorInfoT _instance;
+	return _instance;
+}
+
 void operatorInfoT::AddOperator(const std::string &name,
-							operatorInfoT::typeT type,
-							int precedence,
-							operatorInfoT::asociativityT asociativity,
-							int numOperands)
+								const std::string &str,
+								operatorInfoT::typeT type,
+								int precedence,
+								operatorInfoT::asociativityT asociativity,
+								int numOperands)
 {
 	this->properties.insert(
-		std::pair<std::string, propertiesT>(name, propertiesT(type, precedence, asociativity, numOperands)));
+		std::pair<std::string, propertiesT>(name, propertiesT(type, str, precedence, asociativity, numOperands)));
 }
 
 operatorInfoT::propertiesT operatorInfoT::FindOperator(const std::string &name) const
@@ -29,6 +36,11 @@ operatorInfoT::propertiesT operatorInfoT::FindOperator(const std::string &name) 
 	return oper->second;
 }
 
+operatorInfoT::typeT operatorInfoT::getType(const std::string &name) const
+{
+	return this->FindOperator(name).type;
+}
+
 void operatorInfoT::Execute(const std::string &name, polishStackT<tokenT*> &ps) const
 {
 	propertiesT prop = this->FindOperator(name);
@@ -39,6 +51,9 @@ void operatorInfoT::Execute(const std::string &name, polishStackT<tokenT*> &ps) 
 		break;
 	case MINUS:
 		this->doMinus(ps);
+		break;
+	case UNARY_MINUS:
+		this->doUnaryMinus(ps);
 		break;
 	case TIMES:
 		this->doTimes(ps);
@@ -60,13 +75,13 @@ void operatorInfoT::Execute(const std::string &name, polishStackT<tokenT*> &ps) 
 	}
 }
 
-std::string operatorInfoT::GetAsString() const
+std::string operatorInfoT::AllOperatorsAsString() const
 {
 	std::string operatorStr;
 	std::map<std::string, propertiesT>::const_iterator it = this->properties.begin();
 	while (it != this->properties.end())
 	{
-		operatorStr += it->first;
+		operatorStr += it->second.str;
 		++it;
 	}
 	return operatorStr;
@@ -150,4 +165,12 @@ void operatorInfoT::doAssign(polishStackT<tokenT*> &ps) const
 	ps.pop();
 	ps.push(new variableT(lhsName));
 	ps.DictUpdate(lhsName, a);
+}
+
+void operatorInfoT::doUnaryMinus(polishStackT<tokenT*> &ps) const
+{
+	this->CheckPolishVector(ps, 1);
+	int a = ps.topVal();
+	ps.pop();
+	ps.push(new constantT(-a));
 }

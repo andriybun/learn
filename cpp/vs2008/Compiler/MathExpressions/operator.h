@@ -4,11 +4,12 @@
 #include <math.h>
 #include <stack>
 #include <string>
+#include "common.h"
 #include "polish_stack.h"
 
 class tokenT;
 
-// TODO: Singleton!
+// This class is a singleton
 class operatorInfoT
 {
 public:
@@ -31,14 +32,21 @@ public:
 	struct propertiesT
 	{
 		typeT type;
+		std::string str;
 		int precedence;
 		asociativityT asociativity;
 		int numOperands;
-		propertiesT(typeT type, 
+		propertiesT(
+			typeT type,
+			std::string str,
 			int precedence, 
 			asociativityT asociativity,
 			int numOperands) : 
-		type(type), precedence(precedence), asociativity(asociativity), numOperands(numOperands) {};
+		type(type), 
+			str(str), 
+			precedence(precedence), 
+			asociativity(asociativity), 
+			numOperands(numOperands) {};
 	};
 
 private:
@@ -51,18 +59,22 @@ private:
 	void doModulo(polishStackT<tokenT*> &ps) const;
 	void doPower(polishStackT<tokenT*> &ps) const;
 	void doAssign(polishStackT<tokenT*> &ps) const;
+	void doUnaryMinus(polishStackT<tokenT*> &ps) const;
 
 	void CheckPolishVector(polishStackT<tokenT*> &ps, size_t n) const;
-public:
 	operatorInfoT(void);
+public:
 	~operatorInfoT(void);
 	void AddOperator(
 		const std::string &name, 
+		const std::string &str, 
 		typeT type, 
 		int precedence, 
 		asociativityT asociativity,
 		int numOperands);
 	propertiesT FindOperator(const std::string &name) const;
-	std::string GetAsString() const;
+	typeT getType(const std::string &name) const;
+	std::string AllOperatorsAsString() const;
 	void Execute(const std::string &name, polishStackT<tokenT*> &ps) const;
+	static operatorInfoT& Instance();
 };

@@ -2,6 +2,9 @@
 
 #include <locale>
 #include <string>
+#include "boost/foreach.hpp"
+
+#define _foreach BOOST_FOREACH
 
 inline bool IsNumber(const std::string &word)
 {

@@ -13,28 +13,25 @@
 #include "polish_stack.h"
 #include "fsm.h"
 
-#include "boost/foreach.hpp"
-#define _foreach BOOST_FOREACH
-
 class fsm;
 
 class parserT
 {
 private:
-	operatorInfoT operatorData;
+	operatorInfoT* operatorInfo;
 	std::vector<std::string> tokenVec;
 	polishStackT<tokenT*> polishTokenStack;
 
 	void InitializeOperatorPrecedence()
 	{
-		this->operatorData.AddOperator("+", operatorInfoT::PLUS, 6, operatorInfoT::LEFT, 2);
-		this->operatorData.AddOperator("-", operatorInfoT::MINUS, 6, operatorInfoT::LEFT, 2);
-		//this->operatorData.AddOperator("-", operatorT::UNARY_MINUS, 3, operatorT::RIGHT, 1);
-		this->operatorData.AddOperator("*", operatorInfoT::TIMES, 5, operatorInfoT::LEFT, 2);
-		this->operatorData.AddOperator("/", operatorInfoT::DIVIDE, 5, operatorInfoT::LEFT, 2);
-		this->operatorData.AddOperator("%", operatorInfoT::MODULO, 5, operatorInfoT::LEFT, 2);
-		this->operatorData.AddOperator("^", operatorInfoT::POWER, 4, operatorInfoT::RIGHT, 2);
-		this->operatorData.AddOperator("=", operatorInfoT::ASSIGN, 15, operatorInfoT::RIGHT, 2);
+		this->operatorInfo->AddOperator("+",  "+", operatorInfoT::PLUS, 6, operatorInfoT::LEFT, 2);
+		this->operatorInfo->AddOperator("-",  "-", operatorInfoT::MINUS, 6, operatorInfoT::LEFT, 2);
+		this->operatorInfo->AddOperator("u-", "-", operatorInfoT::UNARY_MINUS, 3, operatorInfoT::RIGHT, 1);
+		this->operatorInfo->AddOperator("*",  "*", operatorInfoT::TIMES, 5, operatorInfoT::LEFT, 2);
+		this->operatorInfo->AddOperator("/",  "/", operatorInfoT::DIVIDE, 5, operatorInfoT::LEFT, 2);
+		this->operatorInfo->AddOperator("%",  "%", operatorInfoT::MODULO, 5, operatorInfoT::LEFT, 2);
+		this->operatorInfo->AddOperator("^",  "^", operatorInfoT::POWER, 4, operatorInfoT::RIGHT, 2);
+		this->operatorInfo->AddOperator("=",  "=", operatorInfoT::ASSIGN, 15, operatorInfoT::RIGHT, 2);
 	}
 	void TokenizeExpression(const std::string &expr);
 	void CompilePolishNotation();

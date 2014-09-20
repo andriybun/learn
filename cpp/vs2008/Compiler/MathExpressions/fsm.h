@@ -12,7 +12,7 @@ class State
 private:
 	
 public:
-	virtual void processToken(fsmT*, const std::string &) = 0;
+	virtual std::string processToken(fsmT*, const std::string &) = 0;
 };
 
 struct exceptT
@@ -24,27 +24,27 @@ struct exceptT
 
 class st0 : public State
 {
-	void processToken(fsmT*, const std::string &);
+	std::string processToken(fsmT*, const std::string &);
 };
 
 class st1 : public State
 {
-	void processToken(fsmT*, const std::string &);
+	std::string processToken(fsmT*, const std::string &);
 };
 
 class st2 : public State
 {
-	void processToken(fsmT*, const std::string &);
+	std::string processToken(fsmT*, const std::string &);
 };
 
 class st3 : public State
 {
-	void processToken(fsmT*, const std::string &);
+	std::string processToken(fsmT*, const std::string &);
 };
 
 class st4 : public State
 {
-	void processToken(fsmT*, const std::string &);
+	std::string processToken(fsmT*, const std::string &);
 };
 
 class FiniteStateMachine
@@ -55,5 +55,5 @@ public:
 	~FiniteStateMachine(void);
 
 	void setCurrent(State *s);
-	void processToken(const std::string &);
+	std::string processToken(const std::string &);
 };

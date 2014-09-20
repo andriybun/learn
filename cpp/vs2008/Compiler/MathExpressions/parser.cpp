@@ -2,6 +2,7 @@
 
 parserT::parserT()
 {
+	this->operatorInfo = &(operatorInfoT::Instance());
 	this->InitializeOperatorPrecedence();
 }
 
@@ -32,7 +33,7 @@ void parserT::TokenizeExpression(const std::string &expr)
 {
 	std::stringstream stringStream(expr);
 	std::string line;
-	std::string ops = this->operatorData.GetAsString() + " ()";
+	std::string ops = this->operatorInfo->AllOperatorsAsString() + " ()";
 	while(std::getline(stringStream, line)) 
 	{
 		std::size_t prev = 0, pos;
@@ -53,18 +54,18 @@ void parserT::TokenizeExpression(const std::string &expr)
 			this->tokenVec.push_back(line.substr(prev, std::string::npos));
 	}
 	FiniteStateMachine fsm;
-	_foreach(std::string s, this->tokenVec)
+	for (size_t i = 0; i < this->tokenVec.size(); i++)
 	{
-		fsm.processToken(s);
+		this->tokenVec[i] = fsm.processToken(this->tokenVec[i]);
 	}
 }
 
 void parserT::CompilePolishNotation()
 {
 	std::stack<std::string> stk;
-	for (size_t i = 0; i < this->tokenVec.size(); i++)
+
+	_foreach(std::string word, this->tokenVec)
 	{
-		std::string word = this->tokenVec[i];
 		bool isVar = IsName(word);
 		bool isNum = IsNumber(word);
 		if (isVar)
@@ -83,7 +84,7 @@ void parserT::CompilePolishNotation()
 		{
 			while (!stk.empty() && stk.top().compare("("))
 			{
-				this->operatorData.Execute(stk.top(), this->polishTokenStack);
+				this->operatorInfo->Execute(stk.top(), this->polishTokenStack);
 				stk.pop();
 				if (stk.empty())
 				{
@@ -98,19 +99,19 @@ void parserT::CompilePolishNotation()
 		}
 		else
 		{
-			operatorInfoT::propertiesT operProp = this->operatorData.FindOperator(word);
+			operatorInfoT::propertiesT operProp = this->operatorInfo->FindOperator(word);
 			if (stk.empty() || !(stk.top().compare("(")))
 			{
 				stk.push(word);
 			}
 			else
 			{
-				operatorInfoT::propertiesT stkOperProp = this->operatorData.FindOperator(stk.top());
+				operatorInfoT::propertiesT stkOperProp = this->operatorInfo->FindOperator(stk.top());
 				if ((stkOperProp.precedence < operProp.precedence) ||
 					((stkOperProp.precedence == operProp.precedence) &&
 					(operProp.asociativity == operatorInfoT::LEFT)))
 				{
-					this->operatorData.Execute(stk.top(), this->polishTokenStack);
+					this->operatorInfo->Execute(stk.top(), this->polishTokenStack);
 					stk.pop();
 				}
 				stk.push(word);
@@ -120,7 +121,7 @@ void parserT::CompilePolishNotation()
 	// Execute the remaining operations
 	while (!stk.empty())
 	{
-		this->operatorData.Execute(stk.top(), this->polishTokenStack);
+		this->operatorInfo->Execute(stk.top(), this->polishTokenStack);
 		stk.pop();
 	}
 	// Check if the resulting polish stack doesn't contain 1 element, then error
