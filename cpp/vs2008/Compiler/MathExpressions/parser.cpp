@@ -3,7 +3,7 @@
 parserT::parserT()
 {
 	this->operatorInfo = &(operatorInfoT::Instance());
-	this->InitializeOperatorPrecedence();
+	this->fsm.InitializeOperatorInfo(this);
 }
 
 parserT::~parserT(void)
@@ -24,6 +24,7 @@ void parserT::EvaluateExpression(const std::string &expr)
 {
 	this->tokenVec.clear();
 	this->ClearStack(this->polishTokenStack);
+	this->fsm.reset();
 	this->TokenizeExpression(expr);
 	this->CompilePolishNotation();
 }
@@ -53,7 +54,6 @@ void parserT::TokenizeExpression(const std::string &expr)
 		if (prev < line.length())
 			this->tokenVec.push_back(line.substr(prev, std::string::npos));
 	}
-	FiniteStateMachine fsm;
 	for (size_t i = 0; i < this->tokenVec.size(); i++)
 	{
 		this->tokenVec[i] = fsm.processToken(this->tokenVec[i]);
@@ -62,9 +62,9 @@ void parserT::TokenizeExpression(const std::string &expr)
 
 void parserT::CompilePolishNotation()
 {
-	std::stack<std::string> stk;
+	std::stack<std::string> operatorStack;
 
-	_foreach(std::string word, this->tokenVec)
+	foreach_(std::string word, this->tokenVec)
 	{
 		bool isVar = IsName(word);
 		bool isNum = IsNumber(word);
@@ -78,51 +78,51 @@ void parserT::CompilePolishNotation()
 		}
 		else if (!word.compare("("))
 		{
-			stk.push(word);
+			operatorStack.push(word);
 		}
 		else if (!word.compare(")"))
 		{
-			while (!stk.empty() && stk.top().compare("("))
+			while (!operatorStack.empty() && operatorStack.top().compare("("))
 			{
-				this->operatorInfo->Execute(stk.top(), this->polishTokenStack);
-				stk.pop();
-				if (stk.empty())
+				this->operatorInfo->Execute(operatorStack.top(), this->polishTokenStack, this->dict);
+				operatorStack.pop();
+				if (operatorStack.empty())
 				{
 					throw "Error: unbalanced parentheses";
 				}
 			}
-			if (stk.empty())
+			if (operatorStack.empty())
 			{
 				throw "Error: unbalanced parentheses";
 			}
-			stk.pop();
+			operatorStack.pop();
 		}
 		else
 		{
 			operatorInfoT::propertiesT operProp = this->operatorInfo->FindOperator(word);
-			if (stk.empty() || !(stk.top().compare("(")))
+			if (operatorStack.empty() || !(operatorStack.top().compare("(")))
 			{
-				stk.push(word);
+				operatorStack.push(word);
 			}
 			else
 			{
-				operatorInfoT::propertiesT stkOperProp = this->operatorInfo->FindOperator(stk.top());
+				operatorInfoT::propertiesT stkOperProp = this->operatorInfo->FindOperator(operatorStack.top());
 				if ((stkOperProp.precedence < operProp.precedence) ||
 					((stkOperProp.precedence == operProp.precedence) &&
 					(operProp.asociativity == operatorInfoT::LEFT)))
 				{
-					this->operatorInfo->Execute(stk.top(), this->polishTokenStack);
-					stk.pop();
+					this->operatorInfo->Execute(operatorStack.top(), this->polishTokenStack, this->dict);
+					operatorStack.pop();
 				}
-				stk.push(word);
+				operatorStack.push(word);
 			}
 		}
 	}
 	// Execute the remaining operations
-	while (!stk.empty())
+	while (!operatorStack.empty())
 	{
-		this->operatorInfo->Execute(stk.top(), this->polishTokenStack);
-		stk.pop();
+		this->operatorInfo->Execute(operatorStack.top(), this->polishTokenStack, this->dict);
+		operatorStack.pop();
 	}
 	// Check if the resulting polish stack doesn't contain 1 element, then error
 	if (this->polishTokenStack.size() != 1)
@@ -130,11 +130,11 @@ void parserT::CompilePolishNotation()
 		throw "Error: wrong expression";
 	}
 	// Print result
-	printf("Result: %d\n", this->polishTokenStack.topVal());
+	printf("Result: %d\n", this->polishTokenStack.topVal(this->dict));
 }
 
 void parserT::AddVariable(const std::string &name, int val)
 {
-	this->polishTokenStack.DictInsert(name, val);
+	this->dict.DictInsert(name, val);
 }
 

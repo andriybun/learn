@@ -41,34 +41,34 @@ operatorInfoT::typeT operatorInfoT::getType(const std::string &name) const
 	return this->FindOperator(name).type;
 }
 
-void operatorInfoT::Execute(const std::string &name, polishStackT<tokenT*> &ps) const
+void operatorInfoT::Execute(const std::string &name, polishStackT<tokenT*> &ps, WorkspaceVariables &dict) const
 {
 	propertiesT prop = this->FindOperator(name);
 	switch (prop.type)
 	{
 	case PLUS:
-		this->doPlus(ps);
+		this->doPlus(ps, dict);
 		break;
 	case MINUS:
-		this->doMinus(ps);
+		this->doMinus(ps, dict);
 		break;
 	case UNARY_MINUS:
-		this->doUnaryMinus(ps);
+		this->doUnaryMinus(ps, dict);
 		break;
 	case TIMES:
-		this->doTimes(ps);
+		this->doTimes(ps, dict);
 		break;
 	case DIVIDE:
-		this->doDivide(ps);
+		this->doDivide(ps, dict);
 		break;
 	case MODULO:
-		this->doModulo(ps);
+		this->doModulo(ps, dict);
 		break;
 	case POWER:
-		this->doPower(ps);
+		this->doPower(ps, dict);
 		break;
 	case ASSIGN:
-		this->doAssign(ps);
+		this->doAssign(ps, dict);
 		break;
 	default:
 		throw "Exception: operator not implemented";
@@ -95,82 +95,82 @@ void operatorInfoT::CheckPolishVector(polishStackT<tokenT*> &ps, size_t n) const
 	}
 }
 
-void operatorInfoT::doPlus(polishStackT<tokenT*> &ps) const
+void operatorInfoT::doPlus(polishStackT<tokenT*> &ps, WorkspaceVariables &dict) const
 {
 	this->CheckPolishVector(ps, 2);
-	int a = ps.topVal();
+	int a = ps.topVal(dict);
 	ps.pop();
-	int b = ps.topVal();
+	int b = ps.topVal(dict);
 	ps.pop();
 	ps.push(new constantT(b + a));
 }
 
-void operatorInfoT::doMinus(polishStackT<tokenT*> &ps) const
+void operatorInfoT::doMinus(polishStackT<tokenT*> &ps, WorkspaceVariables &dict) const
 {
 	this->CheckPolishVector(ps, 2);
-	int a = ps.topVal();
+	int a = ps.topVal(dict);
 	ps.pop();
-	int b = ps.topVal();
+	int b = ps.topVal(dict);
 	ps.pop();
 	ps.push(new constantT(b - a));
 }
 
-void operatorInfoT::doTimes(polishStackT<tokenT*> &ps) const
+void operatorInfoT::doTimes(polishStackT<tokenT*> &ps, WorkspaceVariables &dict) const
 {
 	this->CheckPolishVector(ps, 2);
-	int a = ps.topVal();
+	int a = ps.topVal(dict);
 	ps.pop();
-	int b = ps.topVal();
+	int b = ps.topVal(dict);
 	ps.pop();
 	ps.push(new constantT(b * a));
 }
 
-void operatorInfoT::doDivide(polishStackT<tokenT*> &ps) const
+void operatorInfoT::doDivide(polishStackT<tokenT*> &ps, WorkspaceVariables &dict) const
 {
 	this->CheckPolishVector(ps, 2);
-	int a = ps.topVal();
+	int a = ps.topVal(dict);
 	ps.pop();
-	int b = ps.topVal();
+	int b = ps.topVal(dict);
 	ps.pop();
 	ps.push(new constantT(b / a));
 }
 
-void operatorInfoT::doModulo(polishStackT<tokenT*> &ps) const
+void operatorInfoT::doModulo(polishStackT<tokenT*> &ps, WorkspaceVariables &dict) const
 {
 	this->CheckPolishVector(ps, 2);
-	int a = ps.topVal();
+	int a = ps.topVal(dict);
 	ps.pop();
-	int b = ps.topVal();
+	int b = ps.topVal(dict);
 	ps.pop();
 	ps.push(new constantT(b % a));
 }
 
-void operatorInfoT::doPower(polishStackT<tokenT*> &ps) const
+void operatorInfoT::doPower(polishStackT<tokenT*> &ps, WorkspaceVariables &dict) const
 {
 	this->CheckPolishVector(ps, 2);
-	int a = ps.topVal();
+	int a = ps.topVal(dict);
 	ps.pop();
-	int b = ps.topVal();
+	int b = ps.topVal(dict);
 	ps.pop();
 	int res = (int)ceil(pow((float)b, (float)a));
 	ps.push(new constantT(res));
 }
 
-void operatorInfoT::doAssign(polishStackT<tokenT*> &ps) const
+void operatorInfoT::doAssign(polishStackT<tokenT*> &ps, WorkspaceVariables &dict) const
 {
 	this->CheckPolishVector(ps, 2);
-	int a = ps.topVal();
+	int a = ps.topVal(dict);
 	ps.pop();
 	std::string lhsName = ps.topName();
 	ps.pop();
 	ps.push(new variableT(lhsName));
-	ps.DictUpdate(lhsName, a);
+	dict.DictUpdate(lhsName, a);
 }
 
-void operatorInfoT::doUnaryMinus(polishStackT<tokenT*> &ps) const
+void operatorInfoT::doUnaryMinus(polishStackT<tokenT*> &ps, WorkspaceVariables &dict) const
 {
 	this->CheckPolishVector(ps, 1);
-	int a = ps.topVal();
+	int a = ps.topVal(dict);
 	ps.pop();
 	ps.push(new constantT(-a));
 }

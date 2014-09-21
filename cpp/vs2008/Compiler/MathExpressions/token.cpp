@@ -17,14 +17,16 @@ variableT::variableT(const std::string &name)
 
 variableT::~variableT() {}
 
-int variableT::getValue(const std::map<std::string, int> &varTable) const
+int variableT::getValue(const WorkspaceVariables &varTable) const
 {
-	std::map<std::string, int>::const_iterator varData = varTable.find(this->name);
-	if (varData == varTable.end())
+	if (boost::optional<int> val = varTable.DictFind(this->getName()))
+	{
+		return *val;
+	}
+	else
 	{
 		throw "Error: variable not initialized";
 	}
-	return varData->second;
 }
 
 std::string variableT::getName() const
@@ -40,7 +42,7 @@ constantT::constantT(const int name)
 
 constantT::~constantT() {}
 
-int constantT::getValue(const std::map<std::string, int> &varTable) const
+int constantT::getValue(const WorkspaceVariables &varTable) const
 {
 	return this->name;
 }
@@ -60,7 +62,7 @@ operatorT::operatorT(std::string name)
 
 operatorT::~operatorT() {}
 
-int operatorT::getValue(const std::map<std::string, int> &varTable) const
+int operatorT::getValue(const WorkspaceVariables &varTable) const
 {
 	throw "Error: operator doesn't have value";
 	return -1;

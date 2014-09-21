@@ -194,6 +194,10 @@
 				RelativePath=".\token.cpp"
 				>
 			</File>
+			<File
+				RelativePath=".\workspace_variables.cpp"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
@@ -222,6 +226,10 @@
 			</File>
 			<File
 				RelativePath=".\token.h"
+				>
+			</File>
+			<File
+				RelativePath=".\workspace_variables.h"
 				>
 			</File>
 		</Filter>

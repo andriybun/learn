@@ -4,7 +4,7 @@
 #include <string>
 #include "boost/foreach.hpp"
 
-#define _foreach BOOST_FOREACH
+#define foreach_ BOOST_FOREACH
 
 inline bool IsNumber(const std::string &word)
 {

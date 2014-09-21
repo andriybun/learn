@@ -1,11 +1,12 @@
 #pragma once
 
-#include <map>
 #include <string>
 #include <sstream>
 #include <stack>
 #include <cstdio>
+#include "boost/optional.hpp"
 #include "operator.h"
+#include "workspace_variables.h"
 
 class tokenT
 {
@@ -18,7 +19,7 @@ public:
 	};
 	tokenT(void);
 	virtual ~tokenT(void);
-	virtual int getValue(const std::map<std::string, int> &varTable) const = 0;
+	virtual int getValue(const WorkspaceVariables &varTable) const = 0;
 	virtual std::string getName() const = 0;
 	typeT getType();
 protected:
@@ -32,7 +33,7 @@ private:
 public:
 	variableT(const std::string &name);
 	~variableT(void);
-	int getValue(const std::map<std::string, int> &varTable) const;
+	int getValue(const WorkspaceVariables &varTable) const;
 	std::string getName() const;
 };
 
@@ -43,7 +44,7 @@ private:
 public:
 	constantT(const int name);
 	~constantT(void);
-	int getValue(const std::map<std::string, int> &varTable) const;
+	int getValue(const WorkspaceVariables &varTable) const;
 	std::string getName() const;
 };
 
@@ -55,6 +56,6 @@ private:
 public:
 	operatorT(std::string name);
 	~operatorT(void); 
-	int getValue(const std::map<std::string, int> &varTable) const;
+	int getValue(const WorkspaceVariables &varTable) const;
 	std::string getName() const;
 };

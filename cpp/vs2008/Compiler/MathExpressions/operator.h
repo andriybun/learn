@@ -6,6 +6,7 @@
 #include <string>
 #include "common.h"
 #include "polish_stack.h"
+#include "workspace_variables.h"
 
 class tokenT;
 
@@ -52,14 +53,14 @@ public:
 private:
 	std::map<std::string, propertiesT> properties;
 
-	void doPlus(polishStackT<tokenT*> &ps) const;
-	void doMinus(polishStackT<tokenT*> &ps) const;
-	void doTimes(polishStackT<tokenT*> &ps) const;
-	void doDivide(polishStackT<tokenT*> &ps) const;
-	void doModulo(polishStackT<tokenT*> &ps) const;
-	void doPower(polishStackT<tokenT*> &ps) const;
-	void doAssign(polishStackT<tokenT*> &ps) const;
-	void doUnaryMinus(polishStackT<tokenT*> &ps) const;
+	void doPlus(polishStackT<tokenT*> &ps, WorkspaceVariables &dict) const;
+	void doMinus(polishStackT<tokenT*> &ps, WorkspaceVariables &dict) const;
+	void doTimes(polishStackT<tokenT*> &ps, WorkspaceVariables &dict) const;
+	void doDivide(polishStackT<tokenT*> &ps, WorkspaceVariables &dict) const;
+	void doModulo(polishStackT<tokenT*> &ps, WorkspaceVariables &dict) const;
+	void doPower(polishStackT<tokenT*> &ps, WorkspaceVariables &dict) const;
+	void doAssign(polishStackT<tokenT*> &ps, WorkspaceVariables &dict) const;
+	void doUnaryMinus(polishStackT<tokenT*> &ps, WorkspaceVariables &dict) const;
 
 	void CheckPolishVector(polishStackT<tokenT*> &ps, size_t n) const;
 	operatorInfoT(void);
@@ -75,6 +76,6 @@ public:
 	propertiesT FindOperator(const std::string &name) const;
 	typeT getType(const std::string &name) const;
 	std::string AllOperatorsAsString() const;
-	void Execute(const std::string &name, polishStackT<tokenT*> &ps) const;
+	void Execute(const std::string &name, polishStackT<tokenT*> &ps, WorkspaceVariables &dict) const;
 	static operatorInfoT& Instance();
 };
