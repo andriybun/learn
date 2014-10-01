@@ -19,41 +19,50 @@ void dump(IObject &obj, int indent = 0)
 int main()
 {
 	Object album("Album");
-	album.push_back(new ValueObject<std::string>("Title", "Origin of symmetry"));
-	album.push_back(new ValueObject<std::string>("Genre", "Rock"));
-	album.push_back(new ValueObject<std::string>("Artist", "Muse"));
-	album.push_back(new ValueObject<int>("Year", 2001));
+	album.add(new ValueObject<std::string>("Title", "Origin of symmetry"));
+	album.add(new ValueObject<std::string>("Genre", "Rock"));
+	album.add(new ValueObject<std::string>("Artist", "Muse"));
+	album.add(new ValueObject<int>("Year", 2001));
 
 	Object track1("Track");
-	track1.push_back(new ValueObject<int>("TrackId", 1));
-	track1.push_back(new ValueObject<std::string>("Title", "New Born"));
+	track1.add(new ValueObject<int>("TrackId", 1));
+	track1.add(new ValueObject<std::string>("Title", "New Born"));
 
 	Object track2("Track");
-	track2.push_back(new ValueObject<int>("TrackId", 2));
-	track2.push_back(new ValueObject<std::string>("Title", "Bliss"));
+	track2.add(new ValueObject<int>("TrackId", 2));
+	track2.add(new ValueObject<std::string>("Title", "Bliss"));
 
 	Object tracks("Tracks");
-	tracks.push_back(&track1);
-	tracks.push_back(&track2);
-
-	album.push_back(&tracks);
-
+	tracks.add(&track1);
+	tracks.add(&track2);
+	album.add(&tracks);
+	
 	dump(album);
+	try
+	{
+		auto trks = &album["Tracks"];
+		dump(trks[0]);
+	}
+	catch (string &eMsg)
+	{
+		cout << eMsg << endl;
+	}
+	
 
 	//for (auto &trk : album["Tracks"])
 	//{
 
 	//}
 
-	try
-	{
-		cout << album["Year"].toString() << endl;
-		cout << track2["Title"].toString() << endl;
-	}
-	catch (string &eMsg)
-	{
-		cout << eMsg << endl;
-	}
+	//try
+	//{
+	//	cout << album["Year"].toString() << endl;
+	//	cout << track2["Title"].toString() << endl;
+	//}
+	//catch (string &eMsg)
+	//{
+	//	cout << eMsg << endl;
+	//}
 
 	return 0;
 }

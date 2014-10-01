@@ -2,6 +2,7 @@
 
 #include<iostream>
 #include<string>
+#include<unordered_map>
 #include<vector>
 
 #include "common.h"
@@ -9,18 +10,20 @@
 
 class Object : public IObject
 {
-	std::vector<IObject*> value_;
+	container_t properties_;
+	std::unordered_map<std::string, size_t> indexMap_;
 public:
 	Object(const std::string &name);
 	~Object() override;
 
-	std::vector<IObject*>::const_iterator begin();
-	std::vector<IObject*>::const_iterator end();
+	container_t::const_iterator begin();
+	container_t::const_iterator end();
 
-	void push_back(IObject* value);
-	IObject* back();
+	void add(IObject* value) override;
 
 	std::string toString();
-	std::vector<IObject*> getProperties() override;
-	IObject &operator[](const std::string &key) override;
+	container_t getProperties() override;
+
+	template <class T>
+	IObject &operator[](const T key);
 };

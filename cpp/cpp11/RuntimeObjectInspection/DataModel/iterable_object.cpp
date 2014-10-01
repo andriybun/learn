@@ -8,7 +8,6 @@ Object::Object(const std::string &name)
 	type_ = "";
 }
 
-
 Object::~Object()
 {
 }
@@ -18,40 +17,50 @@ std::string Object::toString()
 	return std::string("<Object>") + " [" + name_ + "]";
 }
 
-std::vector<IObject*> Object::getProperties()
+container_t Object::getProperties()
 {
-	return value_;
+	return properties_;
 }
 
-std::vector<IObject*>::const_iterator Object::begin()
+container_t::const_iterator Object::begin()
 {
-	return value_.begin();
+	return properties_.begin();
 }
 
-std::vector<IObject*>::const_iterator Object::end()
+container_t::const_iterator Object::end()
 {
-	return value_.end();
+	return properties_.end();
 }
 
-void Object::push_back(IObject* value)
+void Object::add(IObject* value)
 {
-	value_.push_back(value);
+	std::string name = value->getName();
+	auto search = indexMap_.find(name);
+	if (search == indexMap_.end())
+	{
+		indexMap_[name] = properties_.size();
+	}
+	properties_.push_back(value);
 }
 
-IObject* Object::back()
-{
-	return value_.back();
-}
-
+template <>
 IObject & Object::operator[](const std::string &key)
 {
-	for (auto &value : value_)
-	{
-		if (!key.compare(value->getName()))
-		{
-			return *value;
-		}
-	}
+	auto search = indexMap_.find(key);
+	if (search != indexMap_.end()) return *properties_[search->second];
 	throw std::string("Property \'") + key + std::string("\' not found");
 }
 
+template <>
+IObject & Object::operator[](const char* const key)
+{
+	auto search = indexMap_.find(key);
+	if (search != indexMap_.end()) return *properties_[search->second];
+	throw std::string("Property \'") + key + std::string("\' not found");
+}
+
+template <>
+IObject & Object::operator[](const int &key)
+{
+	return *properties_[key];
+}
